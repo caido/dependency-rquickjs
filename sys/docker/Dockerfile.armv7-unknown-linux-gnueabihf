@@ -1,0 +1,4 @@
+FROM ghcr.io/cross-rs/armv7-unknown-linux-gnueabihf:main
+
+RUN apt-get update && \
+    apt-get install --assume-yes --no-install-recommends libclang-10-dev clang-10 patch

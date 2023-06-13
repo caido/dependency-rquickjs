@@ -36,3 +36,13 @@ update.%:
 # reset patches
 reset:
 	@cd quickjs && git reset --hard HEAD
+
+# bindings
+bindings-install:
+	rustup toolchain install 1.70.0-x86_64-unknown-linux-gnu --component rustfmt
+
+bindings-armv7:
+	CROSS_CONFIG=Cross.toml cross build --target armv7-unknown-linux-gnueabihf --features exports,bindgen,update-bindings,logging
+
+bindings-aarch64:
+	CROSS_CONFIG=Cross.toml cross build --target aarch64-unknown-linux-gnu --features exports,bindgen,update-bindings,logging

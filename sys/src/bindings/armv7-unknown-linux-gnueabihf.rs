@@ -57,7 +57,7 @@ pub const JS_DEF_PROP_DOUBLE: u32 = 6;
 pub const JS_DEF_PROP_UNDEFINED: u32 = 7;
 pub const JS_DEF_OBJECT: u32 = 8;
 pub const JS_DEF_ALIAS: u32 = 9;
-pub type size_t = ::std::os::raw::c_ulong;
+pub type size_t = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct JSRuntime {
@@ -128,99 +128,7 @@ fn bindgen_test_layout_JSRefCountHeader() {
         )
     );
 }
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union JSValueUnion {
-    pub int32: i32,
-    pub float64: f64,
-    pub ptr: *mut ::std::os::raw::c_void,
-}
-#[test]
-fn bindgen_test_layout_JSValueUnion() {
-    const UNINIT: ::std::mem::MaybeUninit<JSValueUnion> = ::std::mem::MaybeUninit::uninit();
-    let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<JSValueUnion>(),
-        8usize,
-        concat!("Size of: ", stringify!(JSValueUnion))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<JSValueUnion>(),
-        8usize,
-        concat!("Alignment of ", stringify!(JSValueUnion))
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).int32) as usize - ptr as usize },
-        0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(JSValueUnion),
-            "::",
-            stringify!(int32)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).float64) as usize - ptr as usize },
-        0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(JSValueUnion),
-            "::",
-            stringify!(float64)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).ptr) as usize - ptr as usize },
-        0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(JSValueUnion),
-            "::",
-            stringify!(ptr)
-        )
-    );
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct JSValue {
-    pub u: JSValueUnion,
-    pub tag: i64,
-}
-#[test]
-fn bindgen_test_layout_JSValue() {
-    const UNINIT: ::std::mem::MaybeUninit<JSValue> = ::std::mem::MaybeUninit::uninit();
-    let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<JSValue>(),
-        16usize,
-        concat!("Size of: ", stringify!(JSValue))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<JSValue>(),
-        8usize,
-        concat!("Alignment of ", stringify!(JSValue))
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).u) as usize - ptr as usize },
-        0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(JSValue),
-            "::",
-            stringify!(u)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).tag) as usize - ptr as usize },
-        8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(JSValue),
-            "::",
-            stringify!(tag)
-        )
-    );
-}
+pub type JSValue = u64;
 pub type JSCFunction = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut JSContext,
@@ -262,12 +170,12 @@ fn bindgen_test_layout_JSMallocState() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSMallocState>(),
-        32usize,
+        16usize,
         concat!("Size of: ", stringify!(JSMallocState))
     );
     assert_eq!(
         ::std::mem::align_of::<JSMallocState>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(JSMallocState))
     );
     assert_eq!(
@@ -282,7 +190,7 @@ fn bindgen_test_layout_JSMallocState() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).malloc_size) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSMallocState),
@@ -292,7 +200,7 @@ fn bindgen_test_layout_JSMallocState() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).malloc_limit) as usize - ptr as usize },
-        16usize,
+        8usize,
         concat!(
             "Offset of field: ",
             stringify!(JSMallocState),
@@ -302,7 +210,7 @@ fn bindgen_test_layout_JSMallocState() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).opaque) as usize - ptr as usize },
-        24usize,
+        12usize,
         concat!(
             "Offset of field: ",
             stringify!(JSMallocState),
@@ -336,12 +244,12 @@ fn bindgen_test_layout_JSMallocFunctions() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSMallocFunctions>(),
-        32usize,
+        16usize,
         concat!("Size of: ", stringify!(JSMallocFunctions))
     );
     assert_eq!(
         ::std::mem::align_of::<JSMallocFunctions>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(JSMallocFunctions))
     );
     assert_eq!(
@@ -356,7 +264,7 @@ fn bindgen_test_layout_JSMallocFunctions() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).js_free) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSMallocFunctions),
@@ -366,7 +274,7 @@ fn bindgen_test_layout_JSMallocFunctions() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).js_realloc) as usize - ptr as usize },
-        16usize,
+        8usize,
         concat!(
             "Offset of field: ",
             stringify!(JSMallocFunctions),
@@ -376,7 +284,7 @@ fn bindgen_test_layout_JSMallocFunctions() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).js_malloc_usable_size) as usize - ptr as usize },
-        24usize,
+        12usize,
         concat!(
             "Offset of field: ",
             stringify!(JSMallocFunctions),
@@ -964,7 +872,7 @@ fn bindgen_test_layout_JSPropertyEnum() {
     );
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct JSPropertyDescriptor {
     pub flags: ::std::os::raw::c_int,
     pub value: JSValue,
@@ -977,7 +885,7 @@ fn bindgen_test_layout_JSPropertyDescriptor() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSPropertyDescriptor>(),
-        56usize,
+        32usize,
         concat!("Size of: ", stringify!(JSPropertyDescriptor))
     );
     assert_eq!(
@@ -1007,7 +915,7 @@ fn bindgen_test_layout_JSPropertyDescriptor() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).getter) as usize - ptr as usize },
-        24usize,
+        16usize,
         concat!(
             "Offset of field: ",
             stringify!(JSPropertyDescriptor),
@@ -1017,7 +925,7 @@ fn bindgen_test_layout_JSPropertyDescriptor() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).setter) as usize - ptr as usize },
-        40usize,
+        24usize,
         concat!(
             "Offset of field: ",
             stringify!(JSPropertyDescriptor),
@@ -1095,12 +1003,12 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSClassExoticMethods>(),
-        56usize,
+        28usize,
         concat!("Size of: ", stringify!(JSClassExoticMethods))
     );
     assert_eq!(
         ::std::mem::align_of::<JSClassExoticMethods>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(JSClassExoticMethods))
     );
     assert_eq!(
@@ -1115,7 +1023,7 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).get_own_property_names) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassExoticMethods),
@@ -1125,7 +1033,7 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).delete_property) as usize - ptr as usize },
-        16usize,
+        8usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassExoticMethods),
@@ -1135,7 +1043,7 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).define_own_property) as usize - ptr as usize },
-        24usize,
+        12usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassExoticMethods),
@@ -1145,7 +1053,7 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).has_property) as usize - ptr as usize },
-        32usize,
+        16usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassExoticMethods),
@@ -1155,7 +1063,7 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).get_property) as usize - ptr as usize },
-        40usize,
+        20usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassExoticMethods),
@@ -1165,7 +1073,7 @@ fn bindgen_test_layout_JSClassExoticMethods() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).set_property) as usize - ptr as usize },
-        48usize,
+        24usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassExoticMethods),
@@ -1204,12 +1112,12 @@ fn bindgen_test_layout_JSClassDef() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSClassDef>(),
-        40usize,
+        20usize,
         concat!("Size of: ", stringify!(JSClassDef))
     );
     assert_eq!(
         ::std::mem::align_of::<JSClassDef>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(JSClassDef))
     );
     assert_eq!(
@@ -1224,7 +1132,7 @@ fn bindgen_test_layout_JSClassDef() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).finalizer) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassDef),
@@ -1234,7 +1142,7 @@ fn bindgen_test_layout_JSClassDef() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).gc_mark) as usize - ptr as usize },
-        16usize,
+        8usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassDef),
@@ -1244,7 +1152,7 @@ fn bindgen_test_layout_JSClassDef() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).call) as usize - ptr as usize },
-        24usize,
+        12usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassDef),
@@ -1254,7 +1162,7 @@ fn bindgen_test_layout_JSClassDef() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).exotic) as usize - ptr as usize },
-        32usize,
+        16usize,
         concat!(
             "Offset of field: ",
             stringify!(JSClassDef),
@@ -1754,12 +1662,12 @@ fn bindgen_test_layout_JSSharedArrayBufferFunctions() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSSharedArrayBufferFunctions>(),
-        32usize,
+        16usize,
         concat!("Size of: ", stringify!(JSSharedArrayBufferFunctions))
     );
     assert_eq!(
         ::std::mem::align_of::<JSSharedArrayBufferFunctions>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(JSSharedArrayBufferFunctions))
     );
     assert_eq!(
@@ -1774,7 +1682,7 @@ fn bindgen_test_layout_JSSharedArrayBufferFunctions() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).sab_free) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSSharedArrayBufferFunctions),
@@ -1784,7 +1692,7 @@ fn bindgen_test_layout_JSSharedArrayBufferFunctions() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).sab_dup) as usize - ptr as usize },
-        16usize,
+        8usize,
         concat!(
             "Offset of field: ",
             stringify!(JSSharedArrayBufferFunctions),
@@ -1794,7 +1702,7 @@ fn bindgen_test_layout_JSSharedArrayBufferFunctions() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).sab_opaque) as usize - ptr as usize },
-        24usize,
+        12usize,
         concat!(
             "Offset of field: ",
             stringify!(JSSharedArrayBufferFunctions),
@@ -2028,12 +1936,12 @@ fn bindgen_test_layout_JSCFunctionType() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionType>(),
-        8usize,
+        4usize,
         concat!("Size of: ", stringify!(JSCFunctionType))
     );
     assert_eq!(
         ::std::mem::align_of::<JSCFunctionType>(),
-        8usize,
+        4usize,
         concat!("Alignment of ", stringify!(JSCFunctionType))
     );
     assert_eq!(
@@ -2215,7 +2123,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1>(),
-        16usize,
+        8usize,
         concat!(
             "Size of: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1)
@@ -2223,7 +2131,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1() {
     );
     assert_eq!(
         ::std::mem::align_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1>(),
-        8usize,
+        4usize,
         concat!(
             "Alignment of ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1)
@@ -2251,7 +2159,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).cfunc) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_1),
@@ -2273,7 +2181,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2>(),
-        16usize,
+        8usize,
         concat!(
             "Size of: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2)
@@ -2281,7 +2189,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2() {
     );
     assert_eq!(
         ::std::mem::align_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2>(),
-        8usize,
+        4usize,
         concat!(
             "Alignment of ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2)
@@ -2299,7 +2207,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).set) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_2),
@@ -2321,7 +2229,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3>(),
-        16usize,
+        8usize,
         concat!(
             "Size of: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3)
@@ -2329,7 +2237,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3() {
     );
     assert_eq!(
         ::std::mem::align_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3>(),
-        8usize,
+        4usize,
         concat!(
             "Alignment of ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3)
@@ -2347,7 +2255,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).base) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_3),
@@ -2369,7 +2277,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4>(),
-        16usize,
+        8usize,
         concat!(
             "Size of: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4)
@@ -2377,7 +2285,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4() {
     );
     assert_eq!(
         ::std::mem::align_of::<JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4>(),
-        8usize,
+        4usize,
         concat!(
             "Alignment of ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4)
@@ -2395,7 +2303,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).len) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry__bindgen_ty_1__bindgen_ty_4),
@@ -2411,7 +2319,7 @@ fn bindgen_test_layout_JSCFunctionListEntry__bindgen_ty_1() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionListEntry__bindgen_ty_1>(),
-        16usize,
+        8usize,
         concat!("Size of: ", stringify!(JSCFunctionListEntry__bindgen_ty_1))
     );
     assert_eq!(
@@ -2509,7 +2417,7 @@ fn bindgen_test_layout_JSCFunctionListEntry() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<JSCFunctionListEntry>(),
-        32usize,
+        16usize,
         concat!("Size of: ", stringify!(JSCFunctionListEntry))
     );
     assert_eq!(
@@ -2529,7 +2437,7 @@ fn bindgen_test_layout_JSCFunctionListEntry() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).prop_flags) as usize - ptr as usize },
-        8usize,
+        4usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry),
@@ -2539,7 +2447,7 @@ fn bindgen_test_layout_JSCFunctionListEntry() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).def_type) as usize - ptr as usize },
-        9usize,
+        5usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry),
@@ -2549,7 +2457,7 @@ fn bindgen_test_layout_JSCFunctionListEntry() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).magic) as usize - ptr as usize },
-        10usize,
+        6usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry),
@@ -2559,7 +2467,7 @@ fn bindgen_test_layout_JSCFunctionListEntry() {
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).u) as usize - ptr as usize },
-        16usize,
+        8usize,
         concat!(
             "Offset of field: ",
             stringify!(JSCFunctionListEntry),
