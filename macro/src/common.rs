@@ -157,4 +157,5 @@ pub(crate) mod kw {
     syn::custom_keyword!(prefix);
     syn::custom_keyword!(declare);
     syn::custom_keyword!(evaluate);
+    syn::custom_keyword!(extends);
 }

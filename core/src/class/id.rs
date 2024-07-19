@@ -1,4 +1,4 @@
-use crate::qjs;
+use crate::{qjs, Ctx, Object, Value};
 use std::{cell::Cell, sync::Once};
 
 /// The type of identifier of class
@@ -36,5 +36,31 @@ impl ClassId {
             unsafe { qjs::JS_NewClassID(&mut id) };
             self.id.set(id);
         })
+    }
+
+    pub fn prototype<'js>(&self, ctx: Ctx<'js>) -> Option<Object<'js>> {
+        let proto = unsafe {
+            let proto = qjs::JS_GetClassProto(ctx.as_ptr(), self.id.get());
+            Value::from_js_value(ctx, proto)
+        };
+        if proto.is_null() {
+            return None;
+        }
+        Some(
+            proto
+                .into_object()
+                .expect("class prototype wasn't an object"),
+        )
+    }
+}
+
+impl From<qjs::JSClassID> for ClassId {
+    fn from(id: qjs::JSClassID) -> Self {
+        let once = Once::new();
+        once.call_once(|| {}); // Mark as initialized to avoid overriding the id
+        Self {
+            id: Cell::new(id),
+            once,
+        }
     }
 }

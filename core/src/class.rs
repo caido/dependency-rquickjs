@@ -53,6 +53,11 @@ pub trait JsClass<'js>: Trace<'js> {
     fn function() -> Option<StaticJsFn> {
         None
     }
+
+    fn extends(ctx: &Ctx<'js>) -> Option<ClassId> {
+        _ = ctx;
+        None
+    }
 }
 
 /// A object which is instance of a Rust class.

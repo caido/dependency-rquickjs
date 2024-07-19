@@ -1,4 +1,4 @@
-use crate::{qjs, Ctx, Error, Result};
+use crate::{class::ClassId, qjs, Ctx, Error, Result};
 use std::{fmt, hash::Hash, mem, ops::Deref, result::Result as StdResult, str};
 
 pub mod array;
@@ -398,6 +398,15 @@ impl<'js> Value<'js> {
     /// Returns the raw C library JavaScript value.
     pub fn as_raw(&self) -> qjs::JSValue {
         self.value
+    }
+
+    pub fn class_id(&self) -> Option<ClassId> {
+        let id = unsafe { qjs::JS_GetClassID(self.value) };
+        if id != qjs::JS_INVALID_CLASS_ID {
+            Some(ClassId::from(id))
+        } else {
+            None
+        }
     }
 
     /// Create a value from the C library JavaScript value.

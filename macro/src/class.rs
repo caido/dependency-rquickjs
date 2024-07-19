@@ -20,6 +20,7 @@ pub(crate) struct ClassConfig {
     pub crate_: Option<String>,
     pub rename: Option<String>,
     pub rename_all: Option<Case>,
+    pub extends: Option<String>,
 }
 
 pub(crate) enum ClassOption {
@@ -27,6 +28,7 @@ pub(crate) enum ClassOption {
     Crate(ValueOption<Token![crate], LitStr>),
     Rename(ValueOption<kw::rename, LitStr>),
     RenameAll(ValueOption<kw::rename_all, Case>),
+    Extends(ValueOption<kw::extends, LitStr>),
 }
 
 impl Parse for ClassOption {
@@ -39,6 +41,8 @@ impl Parse for ClassOption {
             input.parse().map(Self::Rename)
         } else if input.peek(kw::rename_all) {
             input.parse().map(Self::RenameAll)
+        } else if input.peek(kw::extends) {
+            input.parse().map(Self::Extends)
         } else {
             Err(syn::Error::new(input.span(), "invalid class attribute"))
         }
@@ -59,6 +63,9 @@ impl ClassConfig {
             }
             ClassOption::RenameAll(ref x) => {
                 self.rename_all = Some(x.value);
+            }
+            ClassOption::Extends(ref x) => {
+                self.extends = Some(x.value.value());
             }
         }
     }
@@ -233,6 +240,22 @@ impl Class {
         }
     }
 
+    pub fn extends(&self, crate_name: &Ident) -> TokenStream {
+        match self.config().extends.as_ref() {
+            Some(class_name) => {
+                quote! {
+                    fn extends(ctx: &#crate_name::Ctx<'js>) -> Option<#crate_name::class::ClassId> {
+                        match ctx.globals().get::<_, #crate_name::Value<'js>>(#class_name) {
+                            Ok(value) => value.class_id(),
+                            Err(_) => None
+                        }
+                    }
+                }
+            }
+            None => TokenStream::new(),
+        }
+    }
+
     pub fn expand_props(&self, crate_name: &Ident) -> TokenStream {
         let Class::Struct { ref fields, .. } = self else {
             return TokenStream::new();
@@ -319,6 +342,7 @@ impl Class {
 
         let mutability = self.mutability();
         let props = self.expand_props(&crate_name);
+        let extends = self.extends(&crate_name);
         let reexpand = self.reexpand();
 
         quote! {
@@ -341,7 +365,10 @@ impl Class {
                     fn prototype(ctx: &#crate_name::Ctx<'js>) -> #crate_name::Result<Option<#crate_name::Object<'js>>>{
                         use #crate_name::class::impl_::MethodImplementor;
 
-                        let proto = #crate_name::Object::new(ctx.clone())?;
+                        let proto = match Self::extends(ctx).and_then(|id| id.prototype(ctx.clone())) {
+                            Some(proto) => proto,
+                            None => #crate_name::Object::new(ctx.clone())?
+                        };
                         #props
                         let implementor = #crate_name::class::impl_::MethodImpl::<Self>::new();
                         (&implementor).implement(&proto)?;
@@ -354,6 +381,8 @@ impl Class {
                         let implementor = #crate_name::class::impl_::ConstructorCreate::<Self>::new();
                         (&implementor).create_constructor(ctx)
                     }
+
+                    #extends
                 }
 
                 impl #generics_with_lifetimes #crate_name::IntoJs<'js> for #class_name #generics{
